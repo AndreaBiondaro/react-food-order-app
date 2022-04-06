@@ -5,6 +5,7 @@ type CartContext = {
     totalAmount: number;
     addItem: (item: Meal) => void;
     removeItem: (id: string) => void;
+    clearCart: () => void;
 }
 
 export default CartContext;

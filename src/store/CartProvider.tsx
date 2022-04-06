@@ -64,6 +64,7 @@ const cartReducer: CartReducer = (state, action) => {
         };
     }
 
+    // When submitting a clear action, return the default cart state 
     return defaultCartState;
 }
 
@@ -79,6 +80,9 @@ const CartProvider: FunctionComponent = ({ children }) => {
         },
         removeItem: (item: string) => {
             dispatchCartAction({ type: 'REMOVE', payload: item });
+        },
+        clearCart: () => {
+            dispatchCartAction({ type: 'CLEAR' });
         }
     };
 

@@ -7,6 +7,7 @@ const container = document.getElementById('root');
 if (container) {
   const root = createRoot(container);
   root.render((
+    // Be careful when using StrictMode as it renders componentes twice (NOT IN PRODUCTION)
     <React.StrictMode>
       <App />
     </React.StrictMode>
