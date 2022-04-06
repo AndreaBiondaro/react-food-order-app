@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import classes from './Checkout.module.css';
 
@@ -17,12 +17,6 @@ const getFormControlStyle = (isValid: boolean): string => {
 }
 
 const Checkout = ({ onCancel, onConfirm }: CheckoutProps) => {
-    // Set the default state to false because all input fields are initially blank.
-    const [isNameValid, setIsNameValid] = useState(false);
-    const [isStreetValid, setIsStreetValid] = useState(false);
-    const [isCityValid, setIsCityValid] = useState(false);
-    const [isPostalCodeValid, setIsPostalCodeValid] = useState(false);
-
     const [nameValue, setNameValue] = useState('');
     const [streetValue, setStreetValue] = useState('');
     const [cityValue, setCityValue] = useState('');
@@ -34,48 +28,50 @@ const Checkout = ({ onCancel, onConfirm }: CheckoutProps) => {
     const [cityIsTouched, setCityIsTouched] = useState(false);
     const [postalCodeIsTouched, setPostalCodeIsTouched] = useState(false);
 
+    const isNameValid = !isEmpty(nameValue);
+    const isStreetValid = !isEmpty(streetValue);
+    const isCityValid = !isEmpty(cityValue);
+    const isPostalCodeValid = isFiveChars(postalCodeValue);
+
+    let formIsvalid = false;
+    if (isNameValid && isStreetValid && isCityValid && isPostalCodeValid) {
+        formIsvalid = true;
+    }
+
     const onNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         setNameValue(value);
-        setIsNameValid(!isEmpty(value));
     };
 
     const onStreetChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         setStreetValue(value);
-        setIsStreetValid(!isEmpty(value));
     };
 
     const onCityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         setCityValue(value);
-        setIsCityValid(!isEmpty(value));
     };
 
     const onPostalCodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         setPostalCodeValue(value);
-        setIsPostalCodeValid(isFiveChars(value));
     };
 
     const onNameBlur = () => {
         setNameIsTouched(true);
-        setIsNameValid(!isEmpty(nameValue));
     };
 
     const onStreetBlur = () => {
         setStreetIsTouched(true);
-        setIsStreetValid(!isEmpty(streetValue));
     };
 
     const onCityBlur = () => {
         setCityIsTouched(true);
-        setIsCityValid(!isEmpty(cityValue));
     };
 
     const onPostalCodeBlur = () => {
         setPostalCodeIsTouched(true);
-        setIsPostalCodeValid(isFiveChars(postalCodeValue));
     };
 
 
@@ -86,11 +82,6 @@ const Checkout = ({ onCancel, onConfirm }: CheckoutProps) => {
         const streetIsValid = !isEmpty(streetValue);
         const postalCodeIsValid = isFiveChars(postalCodeValue);
         const cityIsValid = !isEmpty(cityValue);
-
-        setIsNameValid(nameIsValid);
-        setIsStreetValid(streetIsValid);
-        setIsPostalCodeValid(postalCodeIsValid);
-        setIsCityValid(cityIsValid);
 
         const formIsValid = nameIsValid && streetIsValid && postalCodeIsValid && cityIsValid;
 
@@ -135,7 +126,7 @@ const Checkout = ({ onCancel, onConfirm }: CheckoutProps) => {
             </div>
             <div className={classes.actions}>
                 <button type="button" onClick={onCancel}>Cancel</button>
-                <button className={classes.submit}>Confirm</button>
+                <button className={classes.submit} disabled={!formIsvalid}>Confirm</button>
             </div>
         </form>
     )
